@@ -30,6 +30,7 @@ header {
     justify-content: center;
     padding: 50px 0 0;
     width: 100%;
+    z-index: 100;
 
     .header__body {
         display: flex;
