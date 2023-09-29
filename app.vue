@@ -1,10 +1,10 @@
 <template>
   <div class="fullpage">
-    <!-- <TheHeader></TheHeader> -->
+    <TheHeader></TheHeader>
 
     <NuxtPage />
 
-    <!-- <TheFooter></TheFooter> -->
+    <TheFooter></TheFooter>
   </div>
 </template>
 <style lang="scss">
