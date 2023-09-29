@@ -1,7 +1,7 @@
 <template>
     <header v-if="!hideHeaderOnPages.includes($route.name)">
         <div class="header__body">
-            <NuxtLink to="/" :class="{ active: $route.path === '/' }">INSTA TOP</NuxtLink>
+            <NuxtLink to="/" :class="{ active: $route.path === '/' }">INSTA ✦ TOP</NuxtLink>
             <NuxtLink to="/catalog" :class="{ active: $route.path === '/catalog' }">Каталог</NuxtLink>
             <NuxtLink to="/about" :class="{ active: $route.path === '/about' }">Инфо</NuxtLink>
 
