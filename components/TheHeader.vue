@@ -6,7 +6,7 @@
             <NuxtLink to="/about" :class="{ active: $route.path === '/about' }" class="catalog">Инфо</NuxtLink>
 
             <div class="links">
-                <NuxtLink :to="this.accountUrl">
+                <NuxtLink :to="accountUrl">
                     <img src="@/assets/img/acc.svg" alt="">
                 </NuxtLink>
                 <NuxtLink v-if="accountUrl == '/buyer-account'" to="/cart">
