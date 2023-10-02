@@ -3,7 +3,7 @@
         <div class="form">
             <h1>Вывод средств</h1>
 
-            <div class="type">
+            <div class="type" v-if="accountType == 'buyer'">
                 <NuxtLink to="/refill">Пополнение</NuxtLink>
                 <NuxtLink to="/withdrawal">Вывод</NuxtLink>
             </div>
@@ -33,7 +33,7 @@
 
             <div class="pay">
                 <input type="number" v-model="count" placeholder="100 ₸">
-                <button>Вывести</button>
+                <button ref="outBtn" @click="outMoney">Вывести</button>
             </div>
 
             <div class="selects">
@@ -47,13 +47,17 @@
     </div>
 </template>
 <script>
+import global from '~/mixins/global';
+import axios from 'axios';
 export default {
+    mixins: [global],
     data() {
         return {
             count: null,
             cardNumber: '',
             cardHolder: '',
             cardNumberMaxLength: 19,
+            pathUrl: 'https://instatop.kz',
         }
     },
     methods: {
@@ -61,13 +65,65 @@ export default {
             this.cardNumber = this.cardNumber.replace(/\D/g, '');
             this.cardNumber = this.cardNumber.replace(/(.{4})/g, '$1 ');
             this.cardNumber = this.cardNumber.slice(0, this.cardNumberMaxLength);
-        }
+        },
+        outMoney() {
+            const token = this.getAuthorizationCookie()
+            const csrf = this.getCSRFToken()
+            const path = `${this.pathUrl}/api/money/pay-return`
+            axios.defaults.headers.common['Authorization'] = `Token ${token}`;
+            axios.defaults.headers.common['X-CSRFToken'] = csrf;
+            this.$refs.outBtn.innerHTML = 'ОЖИДАЙТЕ'
+
+            axios
+                .post(path, {
+                    amount: this.count,
+                    card_number: this.cardNumber.replace(/\s/g, ''),
+                    cardholder: this.cardHolder
+                })
+                .then(response => {
+                    console.log(response)
+                    if (response.status == 200) {
+                        this.$refs.outBtn.innerHTML = 'УСПЕШНО'
+                    }
+                    if (response.status == 228) {
+                        if (response.data.error_msg == 'ov_merchant_balance_insufficient') {
+                            this.$refs.outBtn.innerHTML = 'Недостаточно средств'
+                        }
+                        else {
+                            this.$refs.outBtn.innerHTML = response.data.error_msg
+                        }
+
+                    }
+
+                })
+                .catch(error => {
+                    console.error(error)
+                    this.$refs.outBtn.innerHTML = 'ВЫВЕСТИ'
+                })
+        },
     },
     watch: {
         cardNumber(newCardNumber) {
             this.cardHolder = this.cardNumberToHolderMapping[newCardNumber] || "";
         }
-    }
+    },
+    mounted() {
+        const accType = localStorage.getItem('accountType')
+        if (accType !== 'buyer-account' && accType !== 'seller-account') {
+            window.location.href = '/login'
+        }
+        if (accType == 'buyer-account') {
+            this.accountType = 'buyer'
+
+        }
+        else if (accType == 'seller-account') {
+            this.accountType = 'seller'
+        }
+        else {
+            return
+        }
+
+    },
 }
 </script>
 <script setup>

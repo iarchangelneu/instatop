@@ -6,26 +6,36 @@
         <div class="form">
             <h1>регистрация</h1>
 
-            <input type="email" name="email" id="email" v-model="password_repeat" placeholder="E-mail">
-            <input type="text" name="name" id="name" v-model="name" placeholder="Отображаемое имя">
-            <input type="password" name="password" id="password" v-model="password" placeholder="Пароль">
+            <input type="email" name="email" id="email" v-model="email" placeholder="E-mail" ref="email">
+            <input type="text" name="insta" id="insta" v-if="userType == 'bloger'" v-model="insta"
+                placeholder="Введите имя вашего instagram аккаунта" ref="inst">
+            <input type="text" name="name" id="name" v-model="name" placeholder="Отображаемое имя" ref="name">
+            <select name="" class="d-none" id="" v-if="userType == 'bloger'" v-model="selectedCategory" ref="select">
+                <option value="" selected disabled>
+                    Категория пользователя
+                </option>
+                <option v-for="(category, index) in categories" :key="index" :value="category.id">{{ category.name
+                }}
+                </option>
+            </select>
+            <input type="password" name="password" id="password" v-model="password" placeholder="Пароль" ref="password">
             <input type="password" name="password_repeat" id="password_repeat" v-model="password_repeat"
-                placeholder="Повторите пароль">
+                placeholder="Повторите пароль" ref="repeat__password">
 
             <div class="type">
-                <button :class="{ active: type == 'buyer' }" @click="type = 'buyer'">ЗАКАЗЧИК</button>
-                <button :class="{ active: type == 'bloger' }" @click="type = 'bloger'">БЛОГЕР</button>
+                <button :class="{ active: userType == 'buyer' }" @click="userType = 'buyer'">ЗАКАЗЧИК</button>
+                <button :class="{ active: userType == 'bloger' }" @click="userType = 'bloger'">БЛОГЕР</button>
             </div>
 
             <label class="custom-checkbox text-left">
-                <input type="checkbox">
-                <p class="checkbox-text m-0">Я согласен с <NuxtLink to="/terms">пользовательским соглашением
+                <input type="checkbox" v-model="checked">
+                <p class="checkbox-text m-0" ref="checked">Я согласен с <NuxtLink to="/terms">пользовательским соглашением
                     </NuxtLink>
                     и <NuxtLink to="/polytics">политикой конфиденциальности</NuxtLink>
                 </p>
             </label>
-
-            <button>ЗАРЕГИСТРИРОВАТЬСЯ</button>
+            <small>{{ error }}</small>
+            <button @click="register">ЗАРЕГИСТРИРОВАТЬСЯ</button>
 
             <div class="text-center">
                 <span>
@@ -36,16 +46,156 @@
     </div>
 </template>
 <script>
+import global from '~/mixins/global';
+import axios from 'axios';
 export default {
+    mixins: [global],
     data() {
         return {
             email: '',
+            insta: '',
             password: '',
+            selectedCategory: 0,
             password_repeat: '',
             name: '',
-            type: 'bloger',
+            error: '',
+            userType: 'bloger',
+            checked: false,
+            pathUrl: 'https://instatop.kz',
+            categories: [
+                { id: 1, name: 'Развлечения' },
+                { id: 2, name: 'Путешествия' },
+                { id: 3, name: 'Мода и стиль' },
+                { id: 4, name: 'Красота и уход' },
+                { id: 5, name: 'Кулинария' },
+                { id: 6, name: 'Наука и образование' },
+                { id: 7, name: 'Бизнес' },
+                { id: 8, name: 'Фитнес и здоровье' },
+                { id: 9, name: 'Творчество' },
+                { id: 10, name: 'Родительство и семья' },
+            ],
         }
-    }
+    },
+    methods: {
+        register() {
+            const buyer = `${this.pathUrl}/api/main/registration/buyer`
+            const seller = `${this.pathUrl}/api/main/registration/seller`
+            const csrf = this.getCSRFToken()
+
+            if (this.email !== '') {
+                this.error = ''
+                this.$refs.email.style.borderColor = '#000'
+
+
+
+
+                if (this.password != 0 && this.password == this.password_repeat) {
+                    this.$refs.password.style.borderColor = '#000'
+                    this.$refs.repeat__password.style.borderColor = '#000'
+                    this.error = ''
+
+                    if (this.checked) {
+                        this.$refs.checked.style.color = '#000'
+                        if (this.name !== '') {
+                            this.$refs.name.style.borderColor = '#000'
+                            this.error = ''
+                            if (this.userType == 'bloger') {
+                                // if (this.selectedCategory > 0) {
+                                if (this.insta !== '') {
+                                    this.error = ''
+                                    this.$refs.inst.style.borderColor = '#000'
+
+
+                                    this.$refs.select.style.borderColor = '#000'
+                                    this.error = ''
+                                    axios.defaults.headers.common['X-CSRFToken'] = csrf;
+                                    // axios.defaults.headers.common['X-Pinggy-No-Screen'] = 'Pisda'
+                                    axios
+                                        .post(seller, { first_name: this.name, password: this.password, username: this.email, email: this.email, inst_username: this.insta })
+                                        .then((res) => {
+
+                                            document.cookie = `Authorization=${res.data.token}; expires=Fri, 31 Dec 2023 23:59:59 GMT; path=/`;
+                                            console.log(res)
+                                            localStorage.setItem('accountType', res.data.redirect_url)
+                                            window.location.href = res.data.redirect_url
+                                        })
+                                        .catch((error) => {
+                                            if (error.response.data.detail) {
+                                                this.error = error.response.data.detail
+                                            }
+                                            this.error = 'Ошибка на стороне сервера'
+                                            console.log(error.response);
+                                        });
+                                    // }
+                                    // else {
+                                    //     this.error = 'Выберите категорию'
+                                    //     this.$refs.select.style.borderColor = 'red'
+                                    // }
+                                }
+                                else {
+                                    this.error = 'Вы не указали имя пользователя instagram'
+                                    this.$refs.inst.style.borderColor = 'red'
+                                }
+
+                            }
+                            else {
+                                axios.defaults.headers.common['X-CSRFToken'] = csrf;
+                                this.error = ''
+                                axios
+                                    .post(buyer, { first_name: this.name, email: this.email, password: this.password, username: this.email, email: this.email })
+                                    .then((res) => {
+
+                                        document.cookie = `Authorization=${res.data.token}; expires=Fri, 31 Dec 2023 23:59:59 GMT; path=/`;
+                                        console.log(res)
+                                        localStorage.setItem('accountType', res.data.redirect_url)
+                                        window.location.href = '/'
+                                    })
+                                    .catch((error) => {
+                                        console.log(error.responseS);
+                                        this.error = error.response.data.detail
+                                    });
+                            }
+
+                        }
+                        else {
+                            this.error = 'Вы не заполнили имя'
+                            this.$refs.name.style.borderColor = 'red'
+                        }
+                    }
+                    else {
+                        this.$refs.checked.style.color = 'red'
+                        this.error = 'Вы не согласились с условиями'
+                    }
+                }
+                else {
+                    this.error = 'Пароли не совпадают'
+                    this.$refs.password.style.borderColor = 'red'
+                    this.$refs.repeat__password.style.borderColor = 'red'
+                }
+
+            }
+            else {
+                this.error = 'Вы не указали почту'
+                this.$refs.email.style.borderColor = 'red'
+            }
+        },
+        getCategoryName(categoryId) {
+            const category = this.categories.find((c) => c.id === categoryId);
+            return category ? category.name : "";
+        },
+    },
+    mounted() {
+        const accType = localStorage.getItem('accountType')
+        if (accType == 'buyer-account') {
+            window.location.href = '/buyer-account'
+        }
+        else if (accType == 'seller-account') {
+            window.location.href = '/seller-account'
+        }
+        else {
+            console.log('not authorized')
+        }
+    },
 }
 </script>
 <script setup>
@@ -64,6 +214,14 @@ useSeoMeta({
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    small {
+        color: red;
+        font-family: var(--int);
+        font-size: 14px;
+        margin-bottom: 20px;
+        display: block;
+    }
 
     .form {
         margin-top: 100px;
@@ -112,6 +270,7 @@ useSeoMeta({
             line-height: 130%;
             font-family: var(--int);
             color: #000;
+            max-width: 388px;
 
             a {
                 text-decoration: underline;
@@ -157,7 +316,8 @@ useSeoMeta({
             }
         }
 
-        input {
+        input,
+        select {
             display: block;
             width: 433px;
 

@@ -1,5 +1,53 @@
 <template>
     <div class="page">
+
+        <div class="main__mob">
+            <div class="main__gif">
+                <img src="@/assets/img/maingif.gif" alt="">
+            </div>
+
+            <div class="text__block">
+                <div class="text-center">
+                    <h1>Продвигайтесь у блогеров в Сторис</h1>
+                </div>
+                <h2>Универсальная платформа для работы с блогерами.</h2>
+
+                <h2>Находите инфлюенсеров и запускайте кампании в пару кликов.</h2>
+
+                <h3>/1. Что такое InstaTop и как это работает?</h3>
+
+                <p>
+                    <img class="float-left" src="@/assets/img/list.svg" alt="">
+                    Это платформа для инфлюенсеров и заказчиков рекламы. Блогеру необходимо только заполнить страницу и
+                    ожидать продаж, а заказчику - выбрать подходящую страницу для размещения, оплатить заказ и отправить ТЗ
+                    в чат с блогером.
+                </p>
+
+                <h3>/2. Почему стоит выбрать InstaTop для рекламы?</h3>
+
+                <p class="mb-0">
+                    <img class="float-left" src="@/assets/img/list.svg" alt="">
+                    Мы даем способ быстро и эффективно размещать рекламу на большую аудиторию, экономя время и повышая
+                    видимость бренда, а для блогеров - это дополнительный источник дохода.
+                </p>
+            </div>
+
+            <div class="something">
+                <div class="anim">
+                    <div class="json" ref="jsonContainer2"></div>
+                    <h2>клиенты после запуска</h2>
+                </div>
+
+                <div class="logo">
+                    <img src="@/assets/img/mainlogo.png" alt="">
+                </div>
+            </div>
+
+            <NuxtLink to="/register" class="start">
+                <h1>начать</h1>
+                <img src="@/assets/img/start.svg" alt="">
+            </NuxtLink>
+        </div>
         <div class="main">
             <div class="main__text">
                 <h1>Продвигайтесь у блогеров в Сторис</h1>
@@ -301,7 +349,7 @@ export default {
 
             breakpoints: {
                 320: {
-                    slidesPerView: 'auto',
+                    slidesPerView: 1,
                     spaceBetween: 20,
 
                 },
@@ -316,6 +364,7 @@ export default {
         this.addThumbItems();
         this.autoSlide();
         this.loadAnimation()
+        this.loadAnimation2()
     },
     methods: {
         activeSlide(index) {
@@ -360,6 +409,23 @@ export default {
                 console.error("Ошибка при загрузке или отображении анимации:", error);
             }
         },
+        async loadAnimation2() {
+            try {
+                const response = await fetch("/animation/animation.json"); // Замените путь на путь к вашему файлу animation.json
+                const animationData = await response.json();
+
+                const container = this.$refs.jsonContainer2;
+                lottie.loadAnimation({
+                    container: container,
+                    renderer: "svg",
+                    loop: true,
+                    autoplay: true,
+                    animationData: animationData,
+                });
+            } catch (error) {
+                console.error("Ошибка при загрузке или отображении анимации:", error);
+            }
+        },
     },
 }
 </script>
@@ -375,11 +441,20 @@ useSeoMeta({
 .page {
     padding: 28px 100px 50px;
 
+    @media (max-width: 1800px) {
+        padding: 28px 50px 50px;
+    }
+
+    @media (max-width: 1024px) {
+        padding: 130px 20px 50px;
+    }
+
     .reviews {
         margin-top: 50px;
-        padding: 40px;
-        border-radius: 60px;
-        background: #FFF;
+
+        @media (max-width: 1024px) {
+            margin-top: 30px;
+        }
 
         .reviews__slider {
             display: flex;
@@ -393,6 +468,19 @@ useSeoMeta({
                 height: 292px;
                 padding: 30px;
 
+                @media (max-width: 1600px) {
+                    height: 320px;
+                }
+
+                @media (max-width: 1400px) {
+                    height: 380px;
+                }
+
+                @media (max-width: 1024px) {
+                    width: 100%;
+                    height: auto;
+                }
+
 
                 h1 {
                     font-size: 20px;
@@ -405,6 +493,11 @@ useSeoMeta({
                     color: #fff;
                     text-align: right;
                     margin: 0;
+
+                    @media (max-width: 1024px) {
+                        font-size: 16px;
+                        margin: 0 0 10px;
+                    }
 
                 }
 
@@ -440,27 +533,46 @@ useSeoMeta({
             text-transform: uppercase;
             font-family: var(--int);
             color: #000;
+
+            @media (max-width: 1024px) {
+                font-size: 20px;
+                text-align: center;
+            }
         }
     }
 
     .how {
         margin-top: 50px;
 
-        .how__body {
-            border-radius: 60px;
-            background: #FFF;
-            padding: 40px;
+        @media (max-width: 1024px) {
+            margin-top: 30px;
+        }
 
+        .how__body {
             .how__info {
                 display: flex;
                 gap: 40px;
 
+                @media (max-width: 1024px) {
+                    flex-direction: column;
+                    gap: 0;
+                }
+
                 .how__text {
                     margin-top: 15px;
+
+                    @media (max-width: 1024px) {
+                        margin: 0;
+                    }
 
                     .text__flex {
                         display: flex;
                         gap: 40px;
+
+                        @media (max-width: 1024px) {
+                            flex-direction: column;
+                            gap: 20px;
+                        }
 
                         div {
 
@@ -475,9 +587,15 @@ useSeoMeta({
                                 max-width: 514px;
                                 margin-bottom: 20px;
 
+                                @media (max-width: 1024px) {
+                                    margin-bottom: 10px;
+                                }
+
                                 &:last-child {
                                     margin-bottom: 0;
                                 }
+
+
                             }
 
                             span {
@@ -496,6 +614,11 @@ useSeoMeta({
                         font-family: var(--int);
                         color: #000;
                         margin: 0 0 16px;
+
+                        @media (max-width: 1024px) {
+                            font-size: 16px;
+                            margin: 0 0 10px;
+                        }
                     }
 
                     h3 {
@@ -506,6 +629,10 @@ useSeoMeta({
                         font-family: var(--int);
                         color: #000;
                         margin: 0 0 32px;
+
+                        @media (max-width: 1024px) {
+                            margin: 0 0 20px;
+                        }
                     }
                 }
             }
@@ -519,6 +646,11 @@ useSeoMeta({
                 font-family: var(--int);
                 color: #000;
                 margin: 0 0 20px;
+
+                @media (max-width: 1024px) {
+                    font-size: 20px;
+                    text-align: center;
+                }
             }
         }
     }
@@ -526,13 +658,26 @@ useSeoMeta({
     .populars {
         margin-top: 50px;
 
+        @media (max-width: 1024px) {
+            margin-top: 40px;
+        }
+
         .populars__body {
             border-radius: 60px;
             background: #000;
             padding: 40px;
 
+            @media (max-width: 1024px) {
+                border-radius: 30px;
+                padding: 30px 20px 20px;
+            }
+
             .text-center {
                 margin-top: 40px;
+
+                @media (max-width: 1024px) {
+                    margin-top: 20px;
+                }
 
                 a {
                     text-decoration: none;
@@ -553,7 +698,13 @@ useSeoMeta({
                     align-items: center;
                     gap: 2.552vw;
 
-
+                    @media (max-width: 1024px) {
+                        padding: 18px 0;
+                        width: 100%;
+                        font-size: 20px;
+                        justify-content: center;
+                        gap: 15px;
+                    }
                 }
             }
 
@@ -563,6 +714,11 @@ useSeoMeta({
                 gap: 40px;
                 grid-auto-flow: dense;
 
+                @media (max-width: 1024px) {
+                    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+                    gap: 20px;
+                }
+
                 .catalog__item {
                     text-decoration: none;
                     border-radius: 60px;
@@ -571,6 +727,11 @@ useSeoMeta({
                     display: flex;
                     flex-direction: column;
                     align-items: center;
+                    text-align: center;
+
+                    @media (max-width: 1024px) {
+                        padding: 30px 20px;
+                    }
 
                     h1 {
                         font-size: 24px;
@@ -582,6 +743,10 @@ useSeoMeta({
                         font-family: var(--int);
                         color: #000;
                         margin: 18px 0 5px;
+
+                        @media (max-width: 1024px) {
+                            font-size: 20px;
+                        }
                     }
 
                     h2 {
@@ -600,7 +765,7 @@ useSeoMeta({
                         margin: 15px 0;
 
                         &:last-child {
-                            margin-bottom: 0 !important;
+                            margin: 0;
                         }
 
                         span {
@@ -615,6 +780,10 @@ useSeoMeta({
                             display: block;
                             text-align: center;
                             margin: 0;
+
+                            @media (max-width: 1024px) {
+                                font-size: 20px;
+                            }
                         }
 
                         small {
@@ -634,6 +803,7 @@ useSeoMeta({
                     img {
                         width: 252px;
                         height: 252px;
+                        border-radius: 100%;
                         object-fit: cover;
                     }
                 }
@@ -648,18 +818,210 @@ useSeoMeta({
                 font-family: var(--int);
                 color: #fff;
                 margin: 0 0 40px;
+
+                @media (max-width: 1024px) {
+                    text-align: center;
+                    font-size: 20px;
+                    margin: 0 0 20px;
+                }
+            }
+        }
+    }
+
+    .main__mob {
+        display: none;
+
+        @media (max-width: 1024px) {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .start {
+            border-radius: 30px;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            padding: 18px 0;
+
+
+            h1 {
+                margin: 0;
+                font-size: 20px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 125%;
+                /* 25px */
+                text-transform: uppercase;
+                font-family: var(--int);
+                color: #fff;
+                text-decoration: none;
+            }
+        }
+
+        .something {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+            grid-auto-flow: dense;
+            gap: 20px;
+
+            .logo {
+                background: #000;
+                border-radius: 30px;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+                max-height: 174px;
+
+                img {
+                    object-fit: cover;
+                    max-width: 100%;
+                }
+            }
+
+            .anim {
+                border-radius: 30px;
+                background: #000;
+                padding: 32px 0 24px;
+                width: 100%;
+                max-height: 174px;
+
+                h2 {
+                    text-align: center;
+                    display: none;
+                    font-size: 24px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: 125%;
+                    text-transform: uppercase;
+                    font-family: var(--int);
+                    color: #fff;
+                    padding: 0 41px;
+                    margin: 0;
+
+
+                }
+            }
+
+        }
+
+        .text__block {
+            border-radius: 30px;
+            background: #000;
+            padding: 30px 20px 40px;
+
+            h1 {
+                font-size: 24px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: 125%;
+                /* 30px */
+                text-transform: uppercase;
+                font-family: var(--int);
+                color: #fff;
+                margin: 0 0 15px;
+            }
+
+            h2 {
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 140%;
+                /* 22.4px */
+                text-transform: uppercase;
+                font-family: var(--int);
+                color: #fff;
+                margin: 0 0 15px;
+
+                &:last-child {
+                    margin: 0 0 20px;
+                }
+
+            }
+
+            h3 {
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: 140%;
+                /* 22.4px */
+                text-transform: uppercase;
+                font-family: var(--int);
+                color: #fff;
+                margin: 0 0 15px;
+            }
+
+            p {
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 140%;
+                font-family: var(--int);
+                color: #fff;
+                margin: 0 0 20px;
+
+                &:last-child {
+                    margin: 0;
+                }
+            }
+
+            .float-left {
+                float: left;
+                margin-right: 5px;
+                margin-top: 4px;
+            }
+
+            img {
+                animation: rotateClockwise 5s linear infinite;
+                transform-origin: center;
+            }
+
+            @keyframes rotateClockwise {
+                from {
+                    transform: rotate(0deg);
+                }
+
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+        }
+
+        .main__gif {
+            img {
+                max-width: 100%;
+                border-radius: 30px;
             }
         }
     }
 
     .main {
         display: flex;
+        justify-content: space-between;
         gap: 30px;
+
+        @media (max-width: 1600px) {
+            gap: 20px;
+        }
+
+        @media (max-width: 1024px) {
+            flex-direction: column;
+            display: none;
+        }
 
         .main__right {
             display: flex;
             flex-direction: column;
+            width: 21.615vw;
             gap: 30px;
+
+            @media (max-width: 1024px) {
+                width: 100%;
+            }
 
             .start {
                 background: #000;
@@ -670,6 +1032,7 @@ useSeoMeta({
                 padding: 35px 50px;
                 text-decoration: none;
 
+
                 h1 {
                     font-size: 36px;
                     font-style: normal;
@@ -679,6 +1042,11 @@ useSeoMeta({
                     font-family: var(--int);
                     color: #fff;
                     margin: 0;
+
+                    @media (max-width: 1600px) {
+                        font-size: 25px;
+
+                    }
                 }
             }
 
@@ -686,7 +1054,7 @@ useSeoMeta({
                 background: #000;
                 border-radius: 60px;
                 max-height: 225px;
-                max-width: 415px;
+                max-width: 100%;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -696,12 +1064,17 @@ useSeoMeta({
                     object-fit: cover;
                     //   max-width: 100%;
                 }
+
+                @media (max-width: 1600px) {
+                    align-items: normal;
+                }
             }
 
             .anim {
                 border-radius: 60px;
                 background: #000;
                 padding: 32px 0 24px;
+                max-width: 100%;
                 max-height: 439px;
 
                 h2 {
@@ -716,6 +1089,13 @@ useSeoMeta({
                     color: #fff;
                     padding: 0 41px;
                     margin: 0;
+
+                    @media (max-width: 1600px) {
+                        @media (max-width: 1600px) {
+                            font-size: 18px;
+                            padding: 0 20px;
+                        }
+                    }
                 }
             }
         }
@@ -723,7 +1103,12 @@ useSeoMeta({
         .main__gif {
             img {
                 border-radius: 60px;
-                max-width: 830px;
+                max-width: 43.229vw;
+                height: 100%;
+
+                @media (max-width: 1024px) {
+                    max-width: 100%;
+                }
             }
         }
 
@@ -731,8 +1116,18 @@ useSeoMeta({
             border-radius: 60px;
             background: #000;
             padding: 50px 30px 55px;
-            max-width: 415px;
-            max-height: 830px;
+            max-width: 21.615vw;
+            max-height: 100%;
+
+            @media (max-width: 1600px) {
+                padding: 30px 20px 30px;
+            }
+
+            @media (max-width: 1024px) {
+                max-width: 100%;
+            }
+
+
 
             h1 {
                 font-family: var(--int);
@@ -744,6 +1139,19 @@ useSeoMeta({
                 text-transform: uppercase;
 
                 margin: 0 0 40px;
+
+                @media (max-width: 1600px) {
+                    font-size: 20px;
+
+                    margin: 0 0 20px;
+                }
+
+                @media (max-width: 1400px) {
+                    font-size: 16px;
+                    margin: 0 0 15px;
+                }
+
+
             }
 
             h2,
@@ -757,6 +1165,15 @@ useSeoMeta({
                 color: #fff;
 
                 margin: 0 0 30px;
+
+                @media (max-width: 1600px) {
+                    font-size: 16px;
+                    margin: 0 0 20px;
+                }
+
+                @media (max-width: 1400px) {
+                    margin: 0 0 15px;
+                }
             }
 
             h3 {
@@ -773,6 +1190,16 @@ useSeoMeta({
                 color: #fff;
                 margin: 0 0 30px;
                 max-width: 355px;
+
+                @media (max-width: 1600px) {
+                    font-size: 15px;
+                    margin: 0 0 20px;
+                }
+
+                @media (max-width: 1400px) {
+                    margin: 0 0 15px;
+                }
+
 
                 img {
                     animation: rotateClockwise 5s linear infinite;
@@ -811,6 +1238,7 @@ useSeoMeta({
 .slide img {
     max-width: 100%;
     display: block;
+    object-fit: cover;
 }
 
 .text-content {
@@ -860,6 +1288,11 @@ useSeoMeta({
     padding: 00px 0;
     overflow: hidden;
     border-radius: 25px;
+
+    @media (max-width: 1024px) {
+        width: 100%;
+        height: 310px;
+    }
 }
 
 .slide-items {

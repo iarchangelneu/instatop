@@ -50,15 +50,44 @@ useSeoMeta({
 .page {
     padding: 150px 100px 64px;
 
+    @media (max-width: 1600px) {
+        padding: 150px 50px 64px;
+    }
+
+    @media (max-width: 1024px) {
+        padding: 150px 20px 30px;
+    }
+
     .about__body {
         .about__img {
             position: relative;
+
+            .bgg {
+                @media (max-width: 1600px) {
+                    height: 550px;
+                }
+
+                @media (max-width: 1400px) {
+                    height: 600px;
+                }
+
+                @media (max-width: 1024px) {
+                    display: none;
+                }
+            }
 
             .buttons {
                 display: flex;
                 position: absolute;
                 bottom: 0;
                 gap: 36px;
+
+                @media (max-width: 1024px) {
+                    position: relative;
+                    margin-top: 20px;
+                    gap: 20px;
+                    flex-direction: column;
+                }
 
                 button {
                     display: flex;
@@ -79,6 +108,14 @@ useSeoMeta({
                     font-family: var(--int);
                     color: #fff;
 
+                    @media (max-width: 1024px) {
+                        flex: 1;
+                        text-align: center;
+                        justify-content: center;
+                        align-items: center;
+                        gap: 10px;
+                        font-size: 20px;
+                    }
                 }
             }
 
@@ -89,6 +126,20 @@ useSeoMeta({
                 display: flex;
                 justify-content: space-between;
                 padding: 55px 36px 55px 50px;
+
+                @media (max-width: 1024px) {
+                    position: relative;
+                    background: #000;
+                    border-radius: 30px;
+                    padding: 20px;
+                }
+
+
+                img {
+                    @media (max-width: 1024px) {
+                        display: none;
+                    }
+                }
 
                 .textdiv {
                     display: flex;
@@ -110,6 +161,17 @@ useSeoMeta({
 
                         &:last-child {
                             margin: 0;
+                        }
+
+                        @media (max-width: 1400px) {
+                            margin: 0 0 10px;
+                            font-size: 15px;
+                        }
+
+                        @media (max-width: 1024px) {
+                            max-width: 100%;
+                            font-size: 16px;
+                            margin: 0 0 20px;
                         }
                     }
 

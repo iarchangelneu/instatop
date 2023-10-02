@@ -3,7 +3,7 @@
         <div class="form">
             <h1>Пополнение счета</h1>
 
-            <div class="type">
+            <div class="type" v-if="accountType == 'buyer'">
                 <NuxtLink to="/refill">Пополнение</NuxtLink>
                 <NuxtLink to="/withdrawal">Вывод</NuxtLink>
             </div>
@@ -24,7 +24,7 @@
 
             <div class="pay">
                 <input type="number" v-model="count" placeholder="100 ₸">
-                <button>Пополнить</button>
+                <button ref="inBtn" @click="inMoney">Пополнить</button>
             </div>
 
             <div class="selects">
@@ -38,26 +38,61 @@
     </div>
 </template>
 <script>
+import global from '~/mixins/global';
+import axios from 'axios'
 export default {
+    mixins: [global],
     data() {
         return {
             count: null,
-            cardNumber: '',
-            cardHolder: '',
-            cardNumberMaxLength: 19,
+            pathUrl: 'https://instatop.kz',
         }
     },
     methods: {
-        formatCardNumber() {
-            this.cardNumber = this.cardNumber.replace(/\D/g, '');
-            this.cardNumber = this.cardNumber.replace(/(.{4})/g, '$1 ');
-            this.cardNumber = this.cardNumber.slice(0, this.cardNumberMaxLength);
-        }
+        inMoney() {
+            const token = this.getAuthorizationCookie()
+            const csrf = this.getCSRFToken()
+            const path = `${this.pathUrl}/api/money/new-pay`
+            axios.defaults.headers.common['Authorization'] = `Token ${token}`;
+            axios.defaults.headers.common['X-CSRFToken'] = csrf;
+            this.$refs.inBtn.innerHTML = 'ОЖИДАЙТЕ'
+
+            axios
+                .post(path, {
+                    amount: this.count
+                })
+                .then(response => {
+                    console.log(response)
+                    window.location.href = response.data.url
+                    if (response.status = 201) {
+                        this.$refs.inBtn.innerHTML = 'ПОПОЛНИТЬ'
+                    }
+                    if (response.status == 228) {
+                        this.$refs.outBtn.innerHTML = response.data.error_msg
+                    }
+                })
+                .catch(error => {
+                    console.error(error)
+                    this.$refs.inBtn.innerHTML = 'ПОПОЛНИТЬ'
+                })
+        },
     },
-    watch: {
-        cardNumber(newCardNumber) {
-            this.cardHolder = this.cardNumberToHolderMapping[newCardNumber] || "";
+    mounted() {
+        const accType = localStorage.getItem('accountType')
+        if (accType !== 'buyer-account' && accType !== 'seller-account') {
+            window.location.href = '/login'
         }
+        if (accType == 'buyer-account') {
+            this.accountType = 'buyer'
+
+        }
+        else if (accType == 'seller-account') {
+            this.accountType = 'seller'
+        }
+        else {
+            return
+        }
+
     }
 }
 </script>

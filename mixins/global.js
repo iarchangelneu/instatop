@@ -4,7 +4,7 @@ export default {
     return {
       isAuth: false,
       accountUrl: "",
-      pathUrl: 'https://studynow.kz',
+      pathUrl: 'https://instatop.kz',
       cart: [],
     };
   },
@@ -89,12 +89,12 @@ export default {
       }
     }, 100);
 
-    const acctype = localStorage.getItem("accountType");
-      if (acctype == "buyer-account") {
-        this.getCart()
-      }
-      else{
-        return
-      }
+    // const acctype = localStorage.getItem("accountType");
+    //   if (acctype == "buyer-account") {
+    //     this.getCart()
+    //   }
+    //   else{
+    //     return
+    //   }
   },
 };

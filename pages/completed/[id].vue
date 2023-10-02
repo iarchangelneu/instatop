@@ -31,6 +31,15 @@ useSeoMeta({
 .page {
     padding: 150px 100px 150px;
 
+    @media (max-width: 1600px) {
+        padding: 150px 50px 150px;
+    }
+
+    @media (max-width: 1024px) {
+        padding: 150px 20px 50px;
+    }
+
+
     h2 {
         font-size: 32px;
         font-style: normal;
@@ -41,6 +50,10 @@ useSeoMeta({
         font-family: var(--int);
         color: #000;
         margin: 0;
+
+        @media (max-width: 1024px) {
+            font-size: 18px;
+        }
     }
 
     a {
@@ -70,6 +83,11 @@ useSeoMeta({
         font-family: var(--int);
         color: #000;
         margin: 20px 0 8.594vw;
+
+        @media (max-width: 1024px) {
+            font-size: 20px;
+            text-align: center;
+        }
     }
 }
 </style>

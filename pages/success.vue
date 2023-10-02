@@ -10,12 +10,45 @@
     </div>
 </template>
 <script>
+import global from '~/mixins/global';
+import axios from 'axios';
 export default {
+    mixins: [global],
     data() {
         return {
-
+            pathUrl: 'https://instatop.kz',
         }
     }
+    ,
+    methods: {
+        sendRequest(reference) {
+            const token = this.getAuthorizationCookie();
+            const path = `${this.pathUrl}/api/money/success/${reference}`;
+            axios.defaults.headers.common['Authorization'] = `Token ${token}`;
+            axios
+                .get(path)
+                .then(response => {
+                    console.log(response)
+                    if (response.status == 200) {
+                        //  window.location.href = '/'
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+    },
+    mounted() {
+        const url = window.location.href;
+        const match = url.match(/order_pay_instatop_(\d+)/);
+
+        if (match) {
+            this.extractedValue = match[0];
+            console.log(this.extractedValue);
+
+            this.sendRequest(match[0])
+        }
+    },
 }
 </script>
 <script setup>
@@ -30,6 +63,14 @@ useSeoMeta({
 .page {
     padding: 150px 100px 150px;
 
+    @media (max-width: 1600px) {
+        padding: 150px 50px 150px;
+    }
+
+    @media (max-width: 1024px) {
+        padding: 150px 20px 50px;
+    }
+
     h2 {
         font-size: 32px;
         font-style: normal;
@@ -40,6 +81,10 @@ useSeoMeta({
         font-family: var(--int);
         color: #000;
         margin: 0;
+
+        @media (max-width: 1024px) {
+            font-size: 18px;
+        }
     }
 
     a {

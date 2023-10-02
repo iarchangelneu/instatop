@@ -6,29 +6,76 @@
         <div class="form">
             <h1>Авторизация</h1>
 
-            <input type="email" name="email" id="email" v-model="password_repeat" placeholder="E-mail">
+            <input type="email" name="email" id="email" v-model="email" placeholder="E-mail">
             <input type="password" name="password" id="password" v-model="password" placeholder="Пароль">
 
-            <button>ВОЙТИ</button>
+            <button @click="login()">ВОЙТИ</button>
 
             <div class="text-center">
                 <span>
-                    Еще нет аккаунта?<NuxtLink to="/login">Регистрация</NuxtLink>
+                    Еще нет аккаунта?<NuxtLink to="/register">Регистрация</NuxtLink>
                 </span>
             </div>
         </div>
     </div>
 </template>
 <script>
+import global from '~/mixins/global';
+import axios from 'axios';
 export default {
+    mixins: [global],
     data() {
         return {
             email: '',
             password: '',
             password_repeat: '',
+            pathUrl: 'https://instatop.kz',
             name: '',
             type: 'bloger',
         }
+    },
+    methods: {
+        login() {
+            const path = `${this.pathUrl}/api/main/authorization`
+            const csrf = this.getCSRFToken()
+
+            axios.defaults.headers.common['X-CSRFToken'] = csrf;
+            axios
+                .post(path, { username: this.email, password: this.password })
+                .then((res) => {
+
+
+
+                    document.cookie = `Authorization=${res.data.token}; expires=Fri, 31 Dec 2023 23:59:59 GMT; path=/`;
+                    localStorage.setItem('accountType', res.data.redirect_url)
+                    if (res.data.redirect_url == 'buyer-account') {
+                        window.location.href = '/'
+                    }
+                    if (res.data.redirect_url == 'seller-account') {
+                        window.location.href = '/seller-account'
+                    }
+
+
+                    console.log(res)
+                })
+                .catch((error) => {
+                    console.log(error);
+                    this.error = error.response.data.non_field_errors.toString()
+                });
+        }
+    },
+    mounted() {
+        const accType = localStorage.getItem('accountType')
+        if (accType == 'buyer-account') {
+            window.location.href = '/buyer-account'
+        }
+        else if (accType == 'seller-account') {
+            window.location.href = '/seller-account'
+        }
+        else {
+            console.log('not authorized')
+        }
+
     }
 }
 </script>

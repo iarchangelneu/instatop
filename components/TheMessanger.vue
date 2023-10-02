@@ -86,7 +86,7 @@ export default {
             newId: this.chatId,
             messages: [],
             isTest: false,
-            pathUrl: 'https://studynow.kz',
+            pathUrl: 'https://instatop.kz',
             msg: [],
             socket: null,
             isSeller: false,
@@ -197,7 +197,7 @@ export default {
             this.startChat()
         },
         startChat() {
-            this.socket = new WebSocket(`wss://studynow.kz/ws/messanger/open-chat/${this.newId}`);
+            this.socket = new WebSocket(`wss://instatop.kz/ws/messanger/open-chat/${this.newId}`);
             this.socket.addEventListener('open', this.onSocketOpen);
             this.socket.addEventListener('message', this.onSocketMessage);
             this.socket.addEventListener('close', this.onSocketClose);
