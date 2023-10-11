@@ -98,8 +98,8 @@
         <div class="populars">
             <div class="populars__body">
                 <h2>популярные блогеры instatop</h2>
-
-                <div class="catalog">
+                <div v-if="populars.length <= 0"></div>
+                <div class="catalog" v-else>
                     <NuxtLink v-for="item in populars.results.slice(0, 4)" :key="item.id" :to="'/user/' + item.id"
                         class="catalog__item">
                         <img :src="item.inst_info" alt="" v-if="item.inst_info === null">
