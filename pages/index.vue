@@ -100,63 +100,20 @@
                 <h2>популярные блогеры instatop</h2>
 
                 <div class="catalog">
-                    <NuxtLink to="/user/1" class="catalog__item">
-                        <img src="@/assets/img/cat1.png" alt="">
+                    <NuxtLink v-for="item in populars.results.slice(0, 4)" :key="item.id" :to="'/user/' + item.id"
+                        class="catalog__item">
+                        <img :src="item.inst_info" alt="" v-if="item.inst_info === null">
+                        <img :src="item.inst_info.profile_pic_url" v-else alt="">
 
-                        <h1>отображаемое имя</h1>
-                        <h2>@username</h2>
+                        <h1>{{ item.user.first_name }}</h1>
+                        <h2>@{{ item.inst_username }}</h2>
 
-                        <div class="stats">
-                            <span>250 000</span>
+                        <div class="stats text-center">
+                            <span v-if="item.inst_info">{{ item.inst_info.followers_amount.toLocaleString() }}</span>
                             <small>подписчиков</small>
                         </div>
-                        <div class="stats">
-                            <span>322</span>
-                            <small>поста в профиле</small>
-                        </div>
-                    </NuxtLink>
-                    <NuxtLink to="/user/1" class="catalog__item">
-                        <img src="@/assets/img/cat1.png" alt="">
-
-                        <h1>отображаемое имя</h1>
-                        <h2>@username</h2>
-
-                        <div class="stats">
-                            <span>250 000</span>
-                            <small>подписчиков</small>
-                        </div>
-                        <div class="stats">
-                            <span>322</span>
-                            <small>поста в профиле</small>
-                        </div>
-                    </NuxtLink>
-                    <NuxtLink to="/user/1" class="catalog__item">
-                        <img src="@/assets/img/cat1.png" alt="">
-
-                        <h1>отображаемое имя</h1>
-                        <h2>@username</h2>
-
-                        <div class="stats">
-                            <span>250 000</span>
-                            <small>подписчиков</small>
-                        </div>
-                        <div class="stats">
-                            <span>322</span>
-                            <small>поста в профиле</small>
-                        </div>
-                    </NuxtLink>
-                    <NuxtLink to="/user/1" class="catalog__item">
-                        <img src="@/assets/img/cat1.png" alt="">
-
-                        <h1>отображаемое имя</h1>
-                        <h2>@username</h2>
-
-                        <div class="stats">
-                            <span>250 000</span>
-                            <small>подписчиков</small>
-                        </div>
-                        <div class="stats">
-                            <span>322</span>
+                        <div class="stats text-center">
+                            <span v-if="item.inst_info">{{ item.inst_info.posts_amount.toLocaleString() }}</span>
                             <small>поста в профиле</small>
                         </div>
                     </NuxtLink>
@@ -325,7 +282,10 @@ import { Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
 import lottie from 'lottie-web/build/player/lottie';
+import global from '~/mixins/global';
+import axios from 'axios';
 export default {
+    mixins: [global],
     props: {
         slideId: String,
     },
@@ -333,6 +293,8 @@ export default {
         return {
             active: 0,
             thumbItems: [],
+            populars: [],
+            pathUrl: 'https://instatop.kz',
             timeout: null,
             images: [
                 { src: "/img/slide1.png", alt: "" },
@@ -365,8 +327,20 @@ export default {
         this.autoSlide();
         this.loadAnimation()
         this.loadAnimation2()
+        this.getPopular()
     },
     methods: {
+        getPopular() {
+            const path = `${this.pathUrl}/api/seller/all-seller`;
+            axios
+                .get(path)
+                .then(response => {
+                    this.populars = response.data
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
         activeSlide(index) {
             this.active = index;
             this.autoSlide();

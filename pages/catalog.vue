@@ -51,7 +51,7 @@
                 </div>
             </div>
         </div>
-        <div v-if="catalog.length <= 0"></div>
+        <div v-if="cataloglength <= 0"></div>
         <div class="catalog__body" v-else>
             <div class="catalog text-center">
                 <NuxtLink v-for="item in catalog.results" :key="item.id" :to="'/user/' + item.id" class="catalog__item">
@@ -65,11 +65,11 @@
                     <h2>@{{ item.inst_username }}</h2>
 
                     <div class="stats text-center">
-                        <span>{{ item.inst_info.followers_amount.toLocaleString() }}</span>
+                        <span v-if="item.inst_info">{{ item.inst_info.followers_amount.toLocaleString() }}</span>
                         <small>подписчиков</small>
                     </div>
                     <div class="stats text-center">
-                        <span>{{ item.inst_info.posts_amount.toLocaleString() }}</span>
+                        <span v-if="item.inst_info">{{ item.inst_info.posts_amount.toLocaleString() }}</span>
                         <small>поста в профиле</small>
                     </div>
                 </NuxtLink>
@@ -109,7 +109,17 @@ export default {
             axios
                 .get(url)
                 .then(response => {
-                    this.catalog = response.data;
+                    const uniqueUsers = [];
+                    const seenUserIds = new Set();
+
+                    response.data.results.forEach(item => {
+                        if (!seenUserIds.has(item.user.id)) {
+                            seenUserIds.add(item.user.id);
+                            uniqueUsers.push(item);
+                        }
+                    });
+
+                    this.catalog.results = uniqueUsers;
                 })
                 .catch(error => {
                     console.error(error);

@@ -8,7 +8,7 @@
 
             <input type="email" name="email" id="email" v-model="email" placeholder="E-mail" ref="email">
             <input type="text" name="insta" id="insta" v-if="userType == 'bloger'" v-model="insta"
-                placeholder="Введите имя вашего instagram аккаунта" ref="inst">
+                placeholder="Введите имя вашего instagram аккаунта" ref="inst" @input="removeAtSymbol">
             <input type="text" name="name" id="name" v-model="name" placeholder="Отображаемое имя" ref="name">
             <select name="" class="d-none" id="" v-if="userType == 'bloger'" v-model="selectedCategory" ref="select">
                 <option value="" selected disabled>
@@ -35,7 +35,15 @@
                 </p>
             </label>
             <small>{{ error }}</small>
-            <button @click="register">ЗАРЕГИСТРИРОВАТЬСЯ</button>
+            <button @click="register" v-if="!wait">ЗАРЕГИСТРИРОВАТЬСЯ</button>
+            <div id='circle' v-else>
+                <div class='One_circle'>
+                    <div class='Two_circle'>
+                        <div class='Three_circle'>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="text-center">
                 <span>
@@ -62,6 +70,7 @@ export default {
             userType: 'bloger',
             checked: false,
             pathUrl: 'https://instatop.kz',
+            wait: false,
             categories: [
                 { id: 1, name: 'Развлечения' },
                 { id: 2, name: 'Путешествия' },
@@ -77,6 +86,21 @@ export default {
         }
     },
     methods: {
+        removeAtSymbol() {
+            const input = this.insta.trim();
+
+            if (input.startsWith('https://www.instagram.com/')) {
+                const url = new URL(input);
+                const pathSegments = url.pathname.split('/');
+                if (pathSegments.length > 1) {
+                    this.insta = pathSegments[1];
+                } else {
+                    this.insta = '';
+                }
+            } else {
+                this.insta = input.replace(/^@/, '');
+            }
+        },
         register() {
             const buyer = `${this.pathUrl}/api/main/registration/buyer`
             const seller = `${this.pathUrl}/api/main/registration/seller`
@@ -107,6 +131,7 @@ export default {
 
 
                                     this.$refs.select.style.borderColor = '#000'
+                                    this.wait = true
                                     this.error = ''
                                     axios.defaults.headers.common['X-CSRFToken'] = csrf;
                                     // axios.defaults.headers.common['X-Pinggy-No-Screen'] = 'Pisda'
@@ -135,12 +160,14 @@ export default {
                                 else {
                                     this.error = 'Вы не указали имя пользователя instagram'
                                     this.$refs.inst.style.borderColor = 'red'
+                                    this.wait = false
                                 }
 
                             }
                             else {
                                 axios.defaults.headers.common['X-CSRFToken'] = csrf;
                                 this.error = ''
+                                this.wait = true
                                 axios
                                     .post(buyer, { first_name: this.name, email: this.email, password: this.password, username: this.email, email: this.email })
                                     .then((res) => {
@@ -207,8 +234,76 @@ useSeoMeta({
 })
 </script>
 <style lang="scss" scoped>
+#circle {
+
+    height: 150px;
+    width: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 50px auto 0;
+    animation: slider 4.2s ease-in alternate-reverse infinite;
+}
+
+.One_circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    width: 100px;
+    animation: slider 3.6s ease-in-out alternate-reverse infinite;
+}
+
+.Two_circle {
+    // height: 10px;
+    // width: 100px;
+    // animation: slider 4.8s ease-in-out alternate-reverse infinite;
+}
+
+.Three_circle {
+    height: 60px;
+    width: 60px;
+    animation: slider 2.8s ease-in-out alternate infinite;
+}
+
+@keyframes slider {
+    to {
+        border: 4px outset #ccc;
+        border-radius: 100%;
+        /*     transform: rotate(-260deg); */
+    }
+
+    from {
+        border: 4px solid #ccc;
+        border-radius: 20%;
+        transform: rotate(360deg);
+        background: radial-gradient(circle at 33% 100%, #fed373 4%, #f15245 30%, #d92e7f 62%, #9b36b7 85%, #515ecf)
+    }
+}
+
+@media (max-width:620px) {
+    #circle {
+        height: 200px;
+        width: 200px;
+    }
+
+    .One_circle {
+        height: 125px;
+        width: 125px;
+    }
+
+    .Three_circle {
+        height: 50px;
+        width: 50px;
+    }
+}
+
 .page {
     padding: 115px 0 0;
+
+    @media (max-width: 1024px) {
+        padding: 100px 20px 50px;
+    }
 
     display: flex;
     flex-direction: column;
@@ -334,6 +429,10 @@ useSeoMeta({
             line-height: 110%;
             font-family: var(--int);
             color: #000;
+
+            @media (max-width: 1024px) {
+                width: 100%;
+            }
         }
 
         h1 {
@@ -347,6 +446,10 @@ useSeoMeta({
             text-align: center;
 
             margin: 0 0 30px;
+
+            @media (max-width: 1024px) {
+                font-size: 32px;
+            }
         }
     }
 }

@@ -290,4 +290,4 @@ header {
 .menu__btn>span::after {
     transition-duration: .25s;
 }
-</style>
+</style> 

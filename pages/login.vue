@@ -91,6 +91,10 @@ useSeoMeta({
 .page {
     padding: 115px 0 0;
 
+    @media (max-width: 1024px) {
+        padding: 100px 20px 50px;
+    }
+
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -205,6 +209,10 @@ useSeoMeta({
             line-height: 110%;
             font-family: var(--int);
             color: #000;
+
+            @media (max-width: 1024px) {
+                width: 100%;
+            }
         }
 
         h1 {
@@ -218,6 +226,10 @@ useSeoMeta({
             text-align: center;
 
             margin: 0 0 30px;
+
+            @media (max-width: 1024px) {
+                font-size: 32px;
+            }
         }
     }
 }
@@ -272,5 +284,4 @@ useSeoMeta({
     @media (max-width: 1024px) {
         margin-bottom: 22px !important;
     }
-}
-</style>
+}</style>
