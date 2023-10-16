@@ -3,7 +3,7 @@
         <prevPage></prevPage>
         <h1></h1>
         <div class="text-center">
-            <h2>ВЫВОД СРЕДСТВ ПРОШЕЛ УСПЕШНО</h2>
+            <h2>ТРАНЗАКЦИЯ ПРОШЛА УСПЕШНО</h2>
 
             <NuxtLink to="/">перейти на главную</NuxtLink>
         </div>
