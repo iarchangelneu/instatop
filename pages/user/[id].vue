@@ -371,7 +371,7 @@ useSeoMeta({
         .user__desc {
             .user__images {
                 display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(256px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(253px, 1fr));
                 gap: 30px;
                 grid-auto-flow: dense;
                 margin-top: 36px;

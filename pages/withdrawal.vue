@@ -367,7 +367,7 @@ useSeoMeta({
 }
 
 .custom-checkbox input[type="checkbox"]:checked+.checkbox-text:before {
-    content: url('@/assets/img/check.svg');
+    content: url('@/assets/img/checkwhite.svg');
     font-size: 16px;
     color: black;
     text-align: center;
